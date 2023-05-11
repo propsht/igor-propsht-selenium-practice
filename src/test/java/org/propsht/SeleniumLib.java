@@ -1,5 +1,10 @@
 package org.propsht;
 
+import java.awt.*;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.DataFlavor;
+import java.awt.datatransfer.UnsupportedFlavorException;
+import java.io.IOException;
 import java.util.Random;
 
 import org.openqa.selenium.By;
@@ -11,7 +16,6 @@ import org.openqa.selenium.support.ui.Select;
 public class SeleniumLib {
 
     private static WebDriver driver;
-
     public SeleniumLib(WebDriver driver) {
         this.driver = driver;
     }
@@ -36,9 +40,15 @@ public class SeleniumLib {
         select.selectByIndex(typeRandom);
     }
 
-    public void copyAndSaveText() {
+    public void copyAndSaveText(){
         WebElement resultsField = driver.findElement(By.id("result_field"));
         String textResults = resultsField.getText();
+    }
+
+
+    public void compareFiles() {
+
+
 
 
     }
@@ -60,14 +70,23 @@ public class SeleniumLib {
         return typeRandom;
     }
 
-    // pause
-    public static void pause() {
+
+
+    public String getBufferText() {
+        Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+
         try {
-            Thread.sleep(3000);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
+            Object clipboardData = clipboard.getData(DataFlavor.stringFlavor);
+            if (clipboardData instanceof String) {
+                return (String) clipboardData;
+            }
+        } catch (UnsupportedFlavorException | IOException e) {
+            e.printStackTrace();
         }
+
+        return null; // Return null if unable to retrieve text from the clipboard
     }
+
 
 
 }
